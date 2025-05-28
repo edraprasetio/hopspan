@@ -29,6 +29,7 @@ export const Home = () => {
         try {
             const response = await axios.post('http://localhost:5000/api/lookup', { domain })
             setResult(response.data)
+            console.log(response.data)
         } catch (err) {
             setError('Error fetching data. Make sure the domain is valid.')
         }
@@ -49,9 +50,6 @@ export const Home = () => {
             {result && (
                 <div style={{ marginTop: '2rem' }}>
                     <h2>Results</h2>
-                    <p>
-                        <strong>IP:</strong> {result.ip}
-                    </p>
                     <p>
                         <strong>Distance:</strong> {result.distance} km
                     </p>
