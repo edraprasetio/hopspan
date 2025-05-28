@@ -40,7 +40,6 @@ app.post("/api/lookup", async (req, res) => {
     );
 
     res.json({
-      ip,
       serverLocation: {
         city: server.city,
         country: server.country_name,
