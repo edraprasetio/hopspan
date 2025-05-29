@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { HomeBackground } from '../components/home/background'
 import axios from 'axios'
 import MapView from '../components/atoms/map'
+import { css } from '@emotion/react'
 
 type LocationInfo = {
     city: string
@@ -12,10 +13,13 @@ type LocationInfo = {
 
 type Result = {
     ip: string
+    websiteSize: string
     serverLocation: LocationInfo
     clientLocation: LocationInfo
     distance: string
 }
+
+const homeCSS = css``
 
 export const Home = () => {
     const [domain, setDomain] = useState('')
@@ -53,6 +57,9 @@ export const Home = () => {
                     <h2>Results</h2>
                     <p>
                         <strong>Distance:</strong> {result.distance} km
+                    </p>
+                    <p>
+                        <strong>Size:</strong> {result.websiteSize ? `${result.websiteSize} bytes` : 'Unavailable'}
                     </p>
                     <h3>Server Location</h3>
                     <p>
