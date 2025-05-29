@@ -21,11 +21,29 @@ function haversine(lat1, lon1, lat2, lon2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
+async function getWebsiteSize(url) {
+  try {
+    const response = await axios.get(url, { responseType: "arraybuffer" });
+    const sizeInBytes = response.data.length;
+    console.log(`Size: ${sizeInBytes} bytes`);
+    return sizeInBytes;
+  } catch (error) {
+    console.error("Error fetching site:", error.message);
+  }
+}
+
 app.post("/api/lookup", async (req, res) => {
   const { domain } = req.body;
+  console.log("Incoming request body:", domain);
+  console.log("Response type:", typeof domain);
+
+  const domainToLookUp = domain.replace(/^https?:\/\//, "").split("/")[0];
 
   try {
-    const { address: ip } = await dns.lookup(domain);
+    const websiteSize = await getWebsiteSize(domain);
+    console.log("Size of website is:", websiteSize);
+
+    const { address: ip } = await dns.lookup(domainToLookUp);
     const serverInfo = await axios.get(`https://ipapi.co/${ip}/json/`);
     const clientInfo = await axios.get("https://ipapi.co/json/");
 
@@ -40,6 +58,7 @@ app.post("/api/lookup", async (req, res) => {
     );
 
     res.json({
+      websiteSize,
       serverLocation: {
         city: server.city,
         country: server.country_name,

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { HomeBackground } from '../components/home/background'
 import axios from 'axios'
+import MapView from '../components/atoms/map'
 
 type LocationInfo = {
     city: string
@@ -61,6 +62,25 @@ export const Home = () => {
                     <p>
                         {result.clientLocation.city}, {result.clientLocation.country}
                     </p>
+                    <MapView
+                        center={{
+                            lat: parseFloat(result.clientLocation.latitude),
+                            lng: parseFloat(result.clientLocation.longitude),
+                            label: 'Your Location',
+                        }}
+                        markers={[
+                            {
+                                lat: parseFloat(result.clientLocation.latitude),
+                                lng: parseFloat(result.clientLocation.longitude),
+                                label: 'Your Location',
+                            },
+                            {
+                                lat: parseFloat(result.serverLocation.latitude),
+                                lng: parseFloat(result.serverLocation.longitude),
+                                label: 'Server Location',
+                            },
+                        ]}
+                    />
                 </div>
             )}
         </div>
