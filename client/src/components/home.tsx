@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 export const HomeBackground = styled.div`
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     background-color: ${(props) => props.theme.primaryColor.black[1]};
     display: flex;
     flex-direction: column;
@@ -13,6 +13,7 @@ export const HomeBackground = styled.div`
 export const Card = styled.div`
     width: 480px;
     display: flex;
+    margin-top: 64px;
     flex-direction: column;
     gap: 32px;
     padding: 32px;
@@ -23,4 +24,9 @@ export const Card = styled.div`
     border-width: thin;
     align-items: center;
     border-color: ${(props) => props.theme.primaryColor.white[1]};
+    transition: border-color 0.3s ease;
+
+    &:hover {
+        border-color: ${(props) => props.theme.primaryColor.blue[1]};
+    }
 `
