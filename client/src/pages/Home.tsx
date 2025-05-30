@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { Card, HomeBackground } from '../components/home'
+import { useRef, useState } from 'react'
+import { Card, HomeBackground, SubCard } from '../components/home'
 import axios from 'axios'
 import MapView from '../components/atoms/map'
-import { Header16, Header24, Header40, Paragraph16 } from '../styles/typography'
+import { Header16, Header20, Header24, Header32, Header40, Paragraph16 } from '../styles/typography'
 import CustomInput from '../components/atoms/input'
 import { WhiteButton } from '../components/atoms/button'
 
@@ -16,25 +16,48 @@ type LocationInfo = {
 type Result = {
     ip: string
     websiteSize: string
+    domainToLookUp: string
     serverLocation: LocationInfo
     clientLocation: LocationInfo
     distance: string
+}
+
+const formatBytes = (bytes: number, decimals = 2): string => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const dm = decimals < 0 ? 0 : decimals
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    // console.log('i value:', i)
+    // console.log('size value:', sizes[i])
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 }
 
 export const Home = () => {
     const [domain, setDomain] = useState('')
     const [result, setResult] = useState<Result | null>(null)
     const [error, setError] = useState('')
+    const resultRef = useRef<HTMLDivElement | null>(null)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+
+        if (!domain.trim()) {
+            setError('Please enter a domain name')
+            return
+        }
+
         setError('')
+        setDomain('')
         setResult(null)
 
         try {
             const response = await axios.post('http://localhost:5000/api/lookup', { domain })
             setResult(response.data)
             console.log(response.data)
+            setTimeout(() => {
+                resultRef.current?.scrollIntoView({ behavior: 'smooth' })
+            }, 100)
         } catch (err) {
             setError('Error fetching data. Make sure the domain is valid.')
         }
@@ -45,37 +68,42 @@ export const Home = () => {
             <Card>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
                     <Header24 style={{ color: '#EFE5FF' }}>HopSpan</Header24>
-                    <Header40 style={{ color: '#309BFF', textAlign: 'center' }}>Where in the World Is This Website?</Header40>
+                    <Header40 style={{ color: '#309BFF', textAlign: 'center' }}>How Far Does Your Data Travel?</Header40>
                 </div>
 
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '32px', alignItems: 'center', width: '100%' }}>
-                    <CustomInput value={domain} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomain(e.target.value)} placeholder='Enter domain (e.g. yahoo.com)' />
+                    <CustomInput value={domain} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomain(e.target.value)} placeholder='Enter domain (e.g. yahoo.com)' message={error} status={error ? 'error' : ''} />
                     <WhiteButton type='submit' style={{ width: '200px' }}>
                         <Header16>Analyze Site</Header16>
                     </WhiteButton>
                 </form>
 
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-
                 <Paragraph16 style={{ textAlign: 'center' }}>Ever wondered where a website is really hosted? HopSpan helps you visualize the server’s physical location, calculate its distance from you, and understand web performance fundamentals.</Paragraph16>
             </Card>
             {result && (
-                <Card>
-                    <Header24>Results</Header24>
-                    <p>
-                        <strong>Distance:</strong> {result.distance} km
-                    </p>
-                    <p>
-                        <strong>Size:</strong> {result.websiteSize ? `${result.websiteSize} bytes` : 'Unavailable'}
-                    </p>
-                    <h3>Server Location</h3>
-                    <p>
-                        {result.serverLocation.city}, {result.serverLocation.country}
-                    </p>
-                    <h3>Your Location</h3>
-                    <p>
-                        {result.clientLocation.city}, {result.clientLocation.country}
-                    </p>
+                <div ref={resultRef} style={{ display: 'flex', flexDirection: 'column', gap: '16px', color: '#B0B0BC' }}>
+                    <Card style={{ gap: '16px' }}>
+                        <Header20>Results For</Header20>
+                        <Header32 style={{ color: '#309BFF' }}>{result.domainToLookUp}</Header32>
+                    </Card>
+
+                    <div style={{ display: 'flex', gap: '16px', width: '100%' }}>
+                        <SubCard>
+                            <Header20>Distance</Header20>
+                            <Header32 style={{ color: '#309BFF' }}>{result.distance} km</Header32>
+                        </SubCard>
+                        <SubCard>
+                            <Header20>Page Size</Header20>
+                            <Header32 style={{ color: '#309BFF' }}>{result.websiteSize ? formatBytes(Number(result.websiteSize)) : 'Unavailable'}</Header32>
+                        </SubCard>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                        <Header20>Location</Header20>
+                        <Header20 style={{ color: '#309BFF' }}>
+                            {result.serverLocation.city}, {result.serverLocation.country}
+                        </Header20>
+                    </div>
+
                     <MapView
                         center={{
                             lat: parseFloat(result.clientLocation.latitude),
@@ -95,7 +123,7 @@ export const Home = () => {
                             },
                         ]}
                     />
-                </Card>
+                </div>
             )}
         </HomeBackground>
     )

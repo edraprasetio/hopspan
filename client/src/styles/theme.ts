@@ -20,6 +20,10 @@ export const defaultTheme: Theme = {
         orange: {
             1: '  #FFB74D',
         },
+        red: {
+            1: '#CF8081',
+            2: '#FFF5F5',
+        },
         white: {
             1: '#EFE5FF',
             2: '#F7FAF4',

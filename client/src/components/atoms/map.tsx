@@ -11,6 +11,11 @@ const DarkMapWrapper = styled.div`
     .leaflet-control-attribution {
         filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
     }
+
+    border-radius: 16px;
+    overflow: hidden;
+    width: 100%;
+    margin-bottom: 64px;
 `
 
 const customIcon = L.icon({
@@ -36,7 +41,7 @@ const MapView = ({ center, markers = [] }: MapProps) => {
 
     return (
         <DarkMapWrapper>
-            <MapContainer center={[center.lat, center.lng]} zoom={4} style={{ height: '400px', width: '100%' }}>
+            <MapContainer center={[center.lat, center.lng]} zoom={3.5} style={{ height: '400px', width: '100%' }}>
                 <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' />
                 {markers.map((marker, idx) => (
                     <Marker key={idx} position={[marker.lat, marker.lng]} icon={customIcon}>

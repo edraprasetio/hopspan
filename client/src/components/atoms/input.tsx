@@ -37,7 +37,7 @@ const StyledInput = styled.input`
         border-color: #cf8081;
         &:focus {
             background-color: ${(props) => props.theme.primaryColor.black[1]};
-            border-color: ${(props) => props.theme.primaryColor.blue[1]};
+            border-color: ${(props) => props.theme.primaryColor.red[2]};
         }
     }
 `
@@ -46,7 +46,7 @@ const StyledMessage = styled.span`
     text-align: right;
     margin-top: 4px;
     font-size: 12px;
-    color: ${(props) => props.theme.primaryColor.black[1]};
+    color: ${(props) => props.theme.primaryColor.white[1]};
 `
 
 const CustomInput = ({ label, status, message, ...inputProps }: any) => {

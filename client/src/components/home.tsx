@@ -30,3 +30,10 @@ export const Card = styled.div`
         border-color: ${(props) => props.theme.primaryColor.blue[1]};
     }
 `
+
+export const SubCard = styled(Card)`
+    gap: 16px;
+    padding: 16px;
+    width: 100%;
+    margin-top: unset;
+`
