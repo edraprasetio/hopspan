@@ -1,7 +1,17 @@
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
-import customIconUrl from '../../assets/icons/marker_blue3.svg'
+import customIconUrl from '../../assets/icons/marker_blue2.svg'
+import styled from '@emotion/styled'
+
+const DarkMapWrapper = styled.div`
+    .leaflet-layer,
+    .leaflet-control-zoom-in,
+    .leaflet-control-zoom-out,
+    .leaflet-control-attribution {
+        filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+    }
+`
 
 const customIcon = L.icon({
     iconUrl: customIconUrl,
@@ -25,25 +35,27 @@ const MapView = ({ center, markers = [] }: MapProps) => {
     const polylinePositions = markers.length >= 2 ? (markers.map((marker) => [marker.lat, marker.lng]) as [number, number][]) : []
 
     return (
-        <MapContainer center={[center.lat, center.lng]} zoom={4} style={{ height: '400px', width: '100%' }}>
-            <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' />
-            {markers.map((marker, idx) => (
-                <Marker key={idx} position={[marker.lat, marker.lng]} icon={customIcon}>
-                    <Popup>{marker.label || `Marker ${idx + 1}`}</Popup>
-                </Marker>
-            ))}
-            {polylinePositions.length >= 2 && (
-                <Polyline
-                    positions={polylinePositions}
-                    pathOptions={{
-                        color: '#1A73E8',
-                        weight: 4,
-                        dashArray: '0',
-                        opacity: 0.7,
-                    }}
-                />
-            )}
-        </MapContainer>
+        <DarkMapWrapper>
+            <MapContainer center={[center.lat, center.lng]} zoom={4} style={{ height: '400px', width: '100%' }}>
+                <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' />
+                {markers.map((marker, idx) => (
+                    <Marker key={idx} position={[marker.lat, marker.lng]} icon={customIcon}>
+                        <Popup>{marker.label || `Marker ${idx + 1}`}</Popup>
+                    </Marker>
+                ))}
+                {polylinePositions.length >= 2 && (
+                    <Polyline
+                        positions={polylinePositions}
+                        pathOptions={{
+                            color: '#309BFF',
+                            weight: 4,
+                            dashArray: '0',
+                            opacity: 0.7,
+                        }}
+                    />
+                )}
+            </MapContainer>
+        </DarkMapWrapper>
     )
 }
 

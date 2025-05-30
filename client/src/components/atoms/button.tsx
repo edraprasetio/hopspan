@@ -27,3 +27,25 @@ export const MediumBlackButton = styled(BigBlackButton)`
     font-size: 18px;
     color: #ffffff;
 `
+
+export const WhiteButton = styled.button`
+    display: flex;
+    padding: 8px 32px;
+    border-radius: 36px;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid ${(props) => props.theme.primaryColor.white[1]};
+    background-color: ${(props) => props.theme.primaryColor.white[1]};
+    color: ${(props) => props.theme.primaryColor.black[1]};
+
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    &:hover {
+        border: 3px solid ${(props) => props.theme.primaryColor.blue[3]};
+        background-color: ${(props) => props.theme.primaryColor.blue[3]};
+        color: ${(props) => props.theme.primaryColor.white[1]};
+    }
+    &:active {
+        background-color: ${(props) => props.theme.primaryColor.white[1]};
+        color: ${(props) => props.theme.primaryColor.blue[3]};
+    }
+`

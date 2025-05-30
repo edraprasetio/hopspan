@@ -1,5 +1,5 @@
 import { MediumBlackButton } from '../components/atoms/button'
-import { HomeBackground } from '../components/home/background'
+import { HomeBackground } from '../components/home'
 
 export const Practice = () => {
     return (
