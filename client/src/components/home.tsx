@@ -13,11 +13,11 @@ export const HomeBackground = styled.div`
 export const Card = styled.div`
     width: 480px;
     display: flex;
-    margin-top: 64px;
     flex-direction: column;
     gap: 32px;
     padding: 32px;
     border-radius: 16px;
+    margin: 64px 0px;
     background-color: ${(props) => props.theme.primaryColor.black[1]};
     color: ${(props) => props.theme.primaryColor.grey[2]};
     border-style: solid;
@@ -36,4 +36,5 @@ export const SubCard = styled(Card)`
     padding: 16px;
     width: 100%;
     margin-top: unset;
+    margin-bottom: unset;
 `

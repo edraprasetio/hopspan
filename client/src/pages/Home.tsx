@@ -6,6 +6,7 @@ import { Header16, Header20, Header24, Header32, Header40, Paragraph16 } from '.
 import CustomInput from '../components/atoms/input'
 import { WhiteButton } from '../components/atoms/button'
 import loadingBlue from '../assets/icons/loading_blue.svg'
+import hopSpanLogo from '../assets/icons/hopspan_logo1.1.png'
 
 type LocationInfo = {
     city: string
@@ -77,7 +78,10 @@ export const Home = () => {
         <HomeBackground>
             <Card ref={inputRef}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
-                    <Header24 style={{ color: '#EFE5FF' }}>HopSpan</Header24>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                        <img src={hopSpanLogo} style={{ height: '34px' }} />
+                        <Header24 style={{ color: '#EFE5FF' }}>HopSpan</Header24>
+                    </div>
                     <Header40 style={{ color: '#309BFF', textAlign: 'center' }}>How Far Does Your Data Travel?</Header40>
                 </div>
 
@@ -92,7 +96,7 @@ export const Home = () => {
             </Card>
             {result && (
                 <div ref={resultRef} style={{ display: 'flex', flexDirection: 'column', gap: '16px', color: '#B0B0BC', alignItems: 'center' }}>
-                    <Card style={{ gap: '16px' }}>
+                    <Card style={{ gap: '16px', margin: 'unset' }}>
                         <Header20>Results For</Header20>
                         <Header32 style={{ color: '#309BFF' }}>{result.domainToLookUp}</Header32>
                     </Card>
