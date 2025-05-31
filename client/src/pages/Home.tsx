@@ -38,6 +38,7 @@ export const Home = () => {
     const [result, setResult] = useState<Result | null>(null)
     const [error, setError] = useState('')
     const resultRef = useRef<HTMLDivElement | null>(null)
+    const inputRef = useRef<HTMLDivElement | null>(null)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -63,9 +64,13 @@ export const Home = () => {
         }
     }
 
+    const handleScanAnother = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
     return (
         <HomeBackground>
-            <Card>
+            <Card ref={inputRef}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
                     <Header24 style={{ color: '#EFE5FF' }}>HopSpan</Header24>
                     <Header40 style={{ color: '#309BFF', textAlign: 'center' }}>How Far Does Your Data Travel?</Header40>
@@ -81,7 +86,7 @@ export const Home = () => {
                 <Paragraph16 style={{ textAlign: 'center' }}>Ever wondered where a website is really hosted? HopSpan helps you visualize the server’s physical location, calculate its distance from you, and understand web performance fundamentals.</Paragraph16>
             </Card>
             {result && (
-                <div ref={resultRef} style={{ display: 'flex', flexDirection: 'column', gap: '16px', color: '#B0B0BC' }}>
+                <div ref={resultRef} style={{ display: 'flex', flexDirection: 'column', gap: '16px', color: '#B0B0BC', alignItems: 'center' }}>
                     <Card style={{ gap: '16px' }}>
                         <Header20>Results For</Header20>
                         <Header32 style={{ color: '#309BFF' }}>{result.domainToLookUp}</Header32>
@@ -123,6 +128,9 @@ export const Home = () => {
                             },
                         ]}
                     />
+                    <WhiteButton type='submit' style={{ width: '240px', marginBottom: '64px' }} onClick={handleScanAnother}>
+                        <Header16>Analyze Another Site</Header16>
+                    </WhiteButton>
                 </div>
             )}
         </HomeBackground>

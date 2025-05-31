@@ -15,7 +15,7 @@ const DarkMapWrapper = styled.div`
     border-radius: 16px;
     overflow: hidden;
     width: 100%;
-    margin-bottom: 64px;
+    margin-bottom: 16px;
 `
 
 const customIcon = L.icon({
