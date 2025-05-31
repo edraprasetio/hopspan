@@ -5,6 +5,7 @@ import MapView from '../components/atoms/map'
 import { Header16, Header20, Header24, Header32, Header40, Paragraph16 } from '../styles/typography'
 import CustomInput from '../components/atoms/input'
 import { WhiteButton } from '../components/atoms/button'
+import loadingBlue from '../assets/icons/loading_blue.svg'
 
 type LocationInfo = {
     city: string
@@ -39,6 +40,7 @@ export const Home = () => {
     const [error, setError] = useState('')
     const resultRef = useRef<HTMLDivElement | null>(null)
     const inputRef = useRef<HTMLDivElement | null>(null)
+    const [loading, setLoading] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -51,6 +53,7 @@ export const Home = () => {
         setError('')
         setDomain('')
         setResult(null)
+        setLoading(true)
 
         try {
             const response = await axios.post('http://localhost:5000/api/lookup', { domain })
@@ -61,6 +64,8 @@ export const Home = () => {
             }, 100)
         } catch (err) {
             setError('Error fetching data. Make sure the domain is valid.')
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -79,7 +84,7 @@ export const Home = () => {
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '32px', alignItems: 'center', width: '100%' }}>
                     <CustomInput value={domain} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomain(e.target.value)} placeholder='Enter domain (e.g. yahoo.com)' message={error} status={error ? 'error' : ''} />
                     <WhiteButton type='submit' style={{ width: '200px' }}>
-                        <Header16>Analyze Site</Header16>
+                        {loading ? <img src={loadingBlue} style={{ height: '24px' }} /> : <Header16>Analyze Site</Header16>}
                     </WhiteButton>
                 </form>
 
