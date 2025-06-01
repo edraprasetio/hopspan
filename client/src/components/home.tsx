@@ -29,6 +29,13 @@ export const Card = styled.div`
     &:hover {
         border-color: ${(props) => props.theme.primaryColor.blue[1]};
     }
+
+    @media (max-width: ${(props) => props.theme.breakPoints.phone}) {
+        width: unset;
+        margin-left: 16px;
+        margin-right: 16px;
+        margin-bottom: 32px;
+    }
 `
 
 export const SubCard = styled(Card)`
@@ -37,4 +44,30 @@ export const SubCard = styled(Card)`
     width: 100%;
     margin-top: unset;
     margin-bottom: unset;
+    text-align: center;
+    @media (max-width: ${(props) => props.theme.breakPoints.phone}) {
+        margin: unset;
+    }
+`
+
+export const SubCardWrapper = styled.div`
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    @media (max-width: ${(props) => props.theme.breakPoints.phone}) {
+        width: unset;
+        gap: 16px;
+        margin-right: 16px;
+        margin-left: 16px;
+    }
+`
+
+export const LocationHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    @media (max-width: ${(props) => props.theme.breakPoints.largePhone}) {
+        flex-direction: column;
+        align-items: center;
+    }
 `

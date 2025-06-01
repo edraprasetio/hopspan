@@ -16,6 +16,10 @@ const DarkMapWrapper = styled.div`
     overflow: hidden;
     width: 100%;
     margin-bottom: 16px;
+    @media (max-width: ${(props) => props.theme.breakPoints.phone}) {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
 `
 
 const customIcon = L.icon({

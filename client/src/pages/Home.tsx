@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { Card, HomeBackground, SubCard } from '../components/home'
+import { Card, HomeBackground, LocationHeader, SubCard, SubCardWrapper } from '../components/home'
 import axios from 'axios'
 import MapView from '../components/atoms/map'
 import { Header16, Header20, Header24, Header32, Header40, Paragraph16 } from '../styles/typography'
@@ -96,12 +96,12 @@ export const Home = () => {
             </Card>
             {result && (
                 <div ref={resultRef} style={{ display: 'flex', flexDirection: 'column', gap: '16px', color: '#B0B0BC', alignItems: 'center' }}>
-                    <Card style={{ gap: '16px', margin: 'unset' }}>
+                    <Card style={{ marginBottom: 'unset' }}>
                         <Header20>Results For</Header20>
                         <Header32 style={{ color: '#309BFF' }}>{result.domainToLookUp}</Header32>
                     </Card>
 
-                    <div style={{ display: 'flex', gap: '16px', width: '100%' }}>
+                    <SubCardWrapper>
                         <SubCard>
                             <Header20>Distance</Header20>
                             <Header32 style={{ color: '#309BFF' }}>{result.distance} km</Header32>
@@ -110,13 +110,13 @@ export const Home = () => {
                             <Header20>Page Size</Header20>
                             <Header32 style={{ color: '#309BFF' }}>{result.websiteSize ? formatBytes(Number(result.websiteSize)) : 'Unavailable'}</Header32>
                         </SubCard>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                    </SubCardWrapper>
+                    <LocationHeader>
                         <Header20>Location</Header20>
                         <Header20 style={{ color: '#309BFF' }}>
                             {result.serverLocation.city}, {result.serverLocation.country}
                         </Header20>
-                    </div>
+                    </LocationHeader>
 
                     <MapView
                         center={{
