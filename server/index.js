@@ -2,6 +2,8 @@ const express = require("express");
 const axios = require("axios");
 const dns = require("dns").promises;
 const cors = require("cors");
+const { chromium } = require("playwright");
+const { estimateCO2 } = require("./utils/carbonEstimator");
 
 const app = express();
 app.use(cors());
@@ -42,6 +44,37 @@ async function getWebsiteSize(rawUrl) {
   }
 }
 
+async function findWebsiteSize(rawUrl) {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+
+  let totalBytes = 0;
+
+  const url =
+    rawUrl.startsWith("http://") || rawUrl.startsWith("https://")
+      ? rawUrl
+      : `https://${rawUrl}`;
+
+  page.on("response", async (response) => {
+    try {
+      const buffer = await response.body();
+      totalBytes += buffer.length;
+    } catch (e) {
+      // Ignore responses with no body (e.g. redirects or 304s)
+    }
+  });
+
+  try {
+    await page.goto(url, { waitUntil: "networkidle" });
+  } catch (err) {
+    console.error("Failed to load page:", err.message);
+    totalBytes = 0;
+  }
+
+  await browser.close();
+  return totalBytes;
+}
+
 app.post("/api/lookup", async (req, res) => {
   const { domain } = req.body;
   console.log("Incoming request body:", domain);
@@ -50,8 +83,24 @@ app.post("/api/lookup", async (req, res) => {
   const domainToLookUp = domain.replace(/^https?:\/\//, "").split("/")[0];
 
   try {
-    const websiteSize = await getWebsiteSize(domain);
+    let websiteSize = await findWebsiteSize(domain);
+    if (websiteSize === 0) {
+      console.log("Fallback: using Axios to calculate website size...");
+      websiteSize = await getWebsiteSize(domain);
+    }
     console.log("Size of website is:", websiteSize);
+
+    const carbonAmount = estimateCO2(websiteSize);
+
+    console.log("CO2:", carbonAmount);
+
+    const greenWeb = await axios.get(
+      `https://api.thegreenwebfoundation.org/api/v3/greencheck/${domainToLookUp}`
+    );
+
+    const isGreen = greenWeb.data.green;
+
+    console.log("Green Web:", isGreen);
 
     const { address: ip } = await dns.lookup(domainToLookUp);
     const serverInfo = await axios.get(`https://ipapi.co/${ip}/json/`);

@@ -30,8 +30,6 @@ const formatBytes = (bytes: number, decimals = 2): string => {
     const dm = decimals < 0 ? 0 : decimals
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
-    // console.log('i value:', i)
-    // console.log('size value:', sizes[i])
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 }
 
