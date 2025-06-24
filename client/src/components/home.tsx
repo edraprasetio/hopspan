@@ -3,11 +3,34 @@ import styled from '@emotion/styled'
 export const HomeBackground = styled.div`
     width: 100%;
     min-height: 100vh;
-    background-color: ${(props) => props.theme.primaryColor.black[1]};
+    background-color: ${(props) => props.theme.primaryColor.white[2]};
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+`
+
+export const HeaderWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    z-index: 1;
+    justify-content: center;
+    color: ${(props) => props.theme.primaryColor.black[1]};
+    align-items: center;
+    width: 640px;
+    text-align: center;
+    margin-bottom: 32px;
+`
+
+export const TopRightImage = styled.img`
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    width: 560px;
 `
 
 export const Card = styled.div`
@@ -27,7 +50,7 @@ export const Card = styled.div`
     transition: border-color 0.3s ease;
 
     &:hover {
-        border-color: ${(props) => props.theme.primaryColor.blue[1]};
+        border-color: ${(props) => props.theme.primaryColor.green[1]};
     }
 
     @media (max-width: ${(props) => props.theme.breakPoints.phone}) {

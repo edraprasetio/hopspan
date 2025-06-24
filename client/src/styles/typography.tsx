@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 
 export const Header16 = styled.div`
-    font-family: MonaSans-Medium;
+    font-family: PlusJakartaSans-Medium;
     font-size: 16px;
 `
 
 export const Header20 = styled.div`
-    font-family: MonaSans-Medium;
+    font-family: PlusJakartaSans-Regular;
     font-size: 20px;
 `
 
@@ -26,15 +26,20 @@ export const Header40 = styled.div`
 `
 
 export const Header64 = styled.div`
-    font-family: MonaSans-SemiBold;
+    font-family: Lato-Bold;
     font-size: 64px;
 `
+export const Paragraph12 = styled.div`
+    font-family: PlusJakartaSans-Light;
+    font-size: 12px;
+`
+
 export const Paragraph14 = styled.div`
-    font-family: MonaSans-Medium;
+    font-family: PlusJakartaSans-Light;
     font-size: 14px;
 `
 
 export const Paragraph16 = styled.div`
-    font-family: MonaSans-Medium;
+    font-family: PlusJakartaSans-Medium;
     font-size: 16px;
 `

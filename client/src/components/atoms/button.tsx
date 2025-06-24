@@ -30,7 +30,7 @@ export const MediumBlackButton = styled(BigBlackButton)`
 
 export const WhiteButton = styled.button`
     display: flex;
-    padding: 8px 32px;
+    padding: 12px 32px;
     border-radius: 36px;
     align-items: center;
     justify-content: center;
@@ -40,12 +40,29 @@ export const WhiteButton = styled.button`
 
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
     &:hover {
-        border: 3px solid ${(props) => props.theme.primaryColor.blue[3]};
-        background-color: ${(props) => props.theme.primaryColor.blue[3]};
+        border: 3px solid ${(props) => props.theme.primaryColor.green[1]};
+        background-color: ${(props) => props.theme.primaryColor.green[1]};
         color: ${(props) => props.theme.primaryColor.white[1]};
     }
     &:active {
         background-color: ${(props) => props.theme.primaryColor.white[1]};
-        color: ${(props) => props.theme.primaryColor.blue[3]};
+        color: ${(props) => props.theme.primaryColor.green[1]};
+    }
+`
+
+export const GreenButton = styled(WhiteButton)`
+    border: 3px solid ${(props) => props.theme.primaryColor.green[1]};
+    background-color: ${(props) => props.theme.primaryColor.green[1]};
+    color: ${(props) => props.theme.primaryColor.white[1]};
+    letter-spacing: 2px;
+
+    &:hover {
+        border: 3px solid ${(props) => props.theme.primaryColor.green[2]};
+        background-color: ${(props) => props.theme.primaryColor.green[2]};
+        color: ${(props) => props.theme.primaryColor.white[1]};
+    }
+    &:active {
+        background-color: ${(props) => props.theme.primaryColor.white[1]};
+        color: ${(props) => props.theme.primaryColor.green[1]};
     }
 `

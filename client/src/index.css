@@ -26,3 +26,33 @@ code {
     src: local('MonaSans-Medium'), url('./assets/fonts/MonaSans-Medium.ttf') format('truetype');
     font-weight: normal;
 }
+
+@font-face {
+    font-family: 'Lato-Bold';
+    src: local('Lato-Bold'), url('./assets/fonts/Lato-Black.ttf') format('truetype');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'PlusJakartaSans-Bold';
+    src: local('PlusJakartaSans-Bold'), url('./assets/fonts/PlusJakartaSans-Bold.ttf') format('truetype');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'PlusJakartaSans-Medium';
+    src: local('PlusJakartaSans-Medium'), url('./assets/fonts/PlusJakartaSans-Medium.ttf') format('truetype');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'PlusJakartaSans-Light';
+    src: local('PlusJakartaSans-Light'), url('./assets/fonts/PlusJakartaSans-Light.ttf') format('truetype');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'PlusJakartaSans-Regular';
+    src: local('PlusJakartaSans-Regular'), url('./assets/fonts/PlusJakartaSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+}

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { useState } from 'react'
-import { Paragraph14, Paragraph16 } from '../../styles/typography'
+import { Paragraph12, Paragraph14, Paragraph16 } from '../../styles/typography'
 
 const StyledInputContainer = styled.div`
     display: flex;
@@ -19,25 +19,29 @@ const StyledLabel = styled.label`
 
 const StyledInput = styled.input`
     padding: 16px 16px;
-    background-color: ${(props) => props.theme.primaryColor.black[1]};
-    border: 1px solid #e0e0e9;
+    background-color: ${(props) => props.theme.primaryColor.white[2]};
+    border: 1px solid ${(props) => props.theme.primaryColor.white[2]};
     border-radius: 8px;
     font-size: 16px;
     outline: none;
     transition: border-color 0.3s ease;
-    font-family: MonaSans-Medium;
+    font-family: PlusJakartaSans-Light;
     font-size: 16px;
-    color: ${(props) => props.theme.primaryColor.white[1]};
+    color: ${(props) => props.theme.primaryColor.black[1]};
+
+    &:hover {
+        border-color: ${(props) => props.theme.primaryColor.green[1]};
+    }
 
     &:focus {
-        border-color: ${(props) => props.theme.primaryColor.blue[1]};
+        border-color: ${(props) => props.theme.primaryColor.green[1]};
     }
 
     &.error {
         border-color: #cf8081;
         &:focus {
-            background-color: ${(props) => props.theme.primaryColor.black[1]};
-            border-color: ${(props) => props.theme.primaryColor.red[2]};
+            background-color: ${(props) => props.theme.primaryColor.white[2]};
+            border-color: ${(props) => props.theme.primaryColor.red[1]};
         }
     }
 `
@@ -46,7 +50,7 @@ const StyledMessage = styled.span`
     text-align: right;
     margin-top: 4px;
     font-size: 12px;
-    color: ${(props) => props.theme.primaryColor.white[1]};
+    color: ${(props) => props.theme.primaryColor.black[1]};
 `
 
 const CustomInput = ({ label, status, message, ...inputProps }: any) => {
@@ -54,7 +58,7 @@ const CustomInput = ({ label, status, message, ...inputProps }: any) => {
     return (
         <StyledInputContainer>
             <StyledLabel>
-                <Paragraph16 style={{ color: '#1A73E8' }}>{label}</Paragraph16>
+                <Paragraph14 style={{ color: '#0a0a0a' }}>{label}</Paragraph14>
             </StyledLabel>
             <StyledInput {...inputProps} className={status === 'error' ? 'error' : ''} />
             {displayedMessage && (

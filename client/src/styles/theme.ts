@@ -2,32 +2,23 @@ import { Theme } from '@emotion/react'
 
 export const defaultTheme: Theme = {
     primaryColor: {
-        beige: {
-            1: '#E5D3B3',
-        },
         black: {
-            1: '#101024',
+            1: '#0a0a0a',
         },
-        blue: {
-            1: '#309BFF',
-            2: '#6590FF',
-            3: '#1a73e8',
-        },
-        grey: {
-            1: '#827B8E',
-            2: '#B0B0BC',
-        },
-        orange: {
-            1: '  #FFB74D',
-        },
-        red: {
-            1: '#CF8081',
-            2: '#FFF5F5',
+        green: {
+            1: '#53ab79',
+            2: '#72d49c',
         },
         white: {
-            1: '#EFE5FF',
-            2: '#F7FAF4',
-            3: '#EAF8FB',
+            1: '#ffffff',
+            2: '#f5f6f8',
+        },
+        grey: {
+            1: '#67687b',
+            2: '#b0b0bc',
+        },
+        red: {
+            1: '#ff8383',
         },
     },
     breakPoints: {
