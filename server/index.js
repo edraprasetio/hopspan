@@ -28,6 +28,9 @@ async function getWebsiteSize(rawUrl) {
     rawUrl.startsWith("http://") || rawUrl.startsWith("https://")
       ? rawUrl
       : `https://${rawUrl}`;
+
+  console.log("Axios Fetched url:", url);
+
   try {
     const response = await axios.get(url, {
       headers: {
@@ -55,6 +58,8 @@ async function findWebsiteSize(rawUrl) {
       ? rawUrl
       : `https://${rawUrl}`;
 
+  console.log("Playwright Fetched url:", url);
+
   page.on("response", async (response) => {
     try {
       const buffer = await response.body();
@@ -77,8 +82,8 @@ async function findWebsiteSize(rawUrl) {
 
 app.post("/api/lookup", async (req, res) => {
   const { domain } = req.body;
-  console.log("Incoming request body:", domain);
-  console.log("Response type:", typeof domain);
+  // console.log("Incoming request body:", domain);
+  // console.log("Response type:", typeof domain);
 
   const domainToLookUp = domain.replace(/^https?:\/\//, "").split("/")[0];
 
@@ -92,7 +97,7 @@ app.post("/api/lookup", async (req, res) => {
 
     const carbonAmount = estimateCO2(websiteSize);
 
-    console.log("CO2:", carbonAmount);
+    console.log("CO2:", carbonAmount.toFixed(3));
 
     const greenWeb = await axios.get(
       `https://api.thegreenwebfoundation.org/api/v3/greencheck/${domainToLookUp}`
