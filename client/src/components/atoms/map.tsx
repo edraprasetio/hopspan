@@ -9,7 +9,7 @@ const DarkMapWrapper = styled.div`
     .leaflet-control-zoom-in,
     .leaflet-control-zoom-out,
     .leaflet-control-attribution {
-        filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+        filter: none;
     }
 
     border-radius: 16px;
@@ -41,14 +41,31 @@ type MapProps = {
 }
 
 const MapView = ({ center, markers = [] }: MapProps) => {
-    const polylinePositions = markers.length >= 2 ? (markers.map((marker) => [marker.lat, marker.lng]) as [number, number][]) : []
+    const polylinePositions =
+        markers.length >= 2
+            ? (markers.map((marker) => [marker.lat, marker.lng]) as [
+                  number,
+                  number
+              ][])
+            : []
 
     return (
         <DarkMapWrapper>
-            <MapContainer center={[center.lat, center.lng]} zoom={3.5} style={{ height: '400px', width: '100%' }}>
-                <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' />
+            <MapContainer
+                center={[center.lat, center.lng]}
+                zoom={3.5}
+                style={{ height: '400px', width: '100%' }}
+            >
+                <TileLayer
+                    url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                />
                 {markers.map((marker, idx) => (
-                    <Marker key={idx} position={[marker.lat, marker.lng]} icon={customIcon}>
+                    <Marker
+                        key={idx}
+                        position={[marker.lat, marker.lng]}
+                        icon={customIcon}
+                    >
                         <Popup>{marker.label || `Marker ${idx + 1}`}</Popup>
                     </Marker>
                 ))}

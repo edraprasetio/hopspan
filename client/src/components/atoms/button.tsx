@@ -38,7 +38,8 @@ export const WhiteButton = styled.button`
     background-color: ${(props) => props.theme.primaryColor.white[1]};
     color: ${(props) => props.theme.primaryColor.black[1]};
 
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, border-color 0.3s ease,
+        color 0.3s ease;
     &:hover {
         border: 3px solid ${(props) => props.theme.primaryColor.green[1]};
         background-color: ${(props) => props.theme.primaryColor.green[1]};

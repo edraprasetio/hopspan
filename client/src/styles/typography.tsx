@@ -5,6 +5,11 @@ export const Header16 = styled.div`
     font-size: 16px;
 `
 
+export const Header16Bold = styled.div`
+    font-family: PlusJakartaSans-Bold;
+    font-size: 16px;
+`
+
 export const Header20 = styled.div`
     font-family: PlusJakartaSans-Regular;
     font-size: 20px;

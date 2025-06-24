@@ -124,6 +124,8 @@ app.post("/api/lookup", async (req, res) => {
     res.json({
       domainToLookUp,
       websiteSize,
+      isGreen,
+      carbonAmount,
       serverLocation: {
         city: server.city,
         country: server.country_name,

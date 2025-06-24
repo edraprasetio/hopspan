@@ -60,7 +60,10 @@ const CustomInput = ({ label, status, message, ...inputProps }: any) => {
             <StyledLabel>
                 <Paragraph14 style={{ color: '#0a0a0a' }}>{label}</Paragraph14>
             </StyledLabel>
-            <StyledInput {...inputProps} className={status === 'error' ? 'error' : ''} />
+            <StyledInput
+                {...inputProps}
+                className={status === 'error' ? 'error' : ''}
+            />
             {displayedMessage && (
                 <StyledMessage>
                     <Paragraph14>{displayedMessage}</Paragraph14>
