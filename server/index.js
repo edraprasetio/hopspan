@@ -4,10 +4,15 @@ const dns = require("dns").promises;
 const cors = require("cors");
 const { chromium } = require("playwright");
 const { estimateCO2 } = require("./utils/carbonEstimator");
+const puppeteer = require("puppeteer-extra");
+const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+const puppeteerExtra = require("puppeteer-extra");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+puppeteerExtra.use(StealthPlugin());
 
 function haversine(lat1, lon1, lat2, lon2) {
   const R = 6371;
@@ -21,6 +26,43 @@ function haversine(lat1, lon1, lat2, lon2) {
     Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
 
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+async function getHtmlSize(rawUrl) {
+  const url =
+    rawUrl.startsWith("http://") || rawUrl.startsWith("https://")
+      ? rawUrl
+      : `https://${rawUrl}`;
+
+  const browser = await puppeteerExtra.launch({ headless: true });
+  const page = await browser.newPage();
+
+  let totalBytes = 0;
+
+  page.on("response", async (response) => {
+    try {
+      const status = response.status();
+
+      // Ignore redirect responses
+      if (status >= 300 && status < 400) return;
+
+      // Only process responses with a body
+      const buffer = await response.buffer();
+      totalBytes += buffer.length;
+    } catch (err) {
+      // Ignore unreadable responses
+    }
+  });
+
+  try {
+    console.log(`Navigating to ${url}`);
+    await page.goto(url, { waitUntil: "networkidle2" });
+  } catch (error) {
+    console.error("Failed to load page:", error.message);
+  }
+
+  await browser.close();
+  return totalBytes;
 }
 
 async function getWebsiteSize(rawUrl) {
@@ -88,7 +130,7 @@ app.post("/api/lookup", async (req, res) => {
   const domainToLookUp = domain.replace(/^https?:\/\//, "").split("/")[0];
 
   try {
-    let websiteSize = await findWebsiteSize(domain);
+    let websiteSize = await getHtmlSize(domain);
     if (websiteSize === 0) {
       console.log("Fallback: using Axios to calculate website size...");
       websiteSize = await getWebsiteSize(domain);
