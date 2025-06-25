@@ -23,6 +23,8 @@ import { GreenButton, WhiteButton } from '../components/atoms/button'
 import loadingBlue from '../assets/icons/loading_blue.svg'
 import hopSpanLogo from '../assets/icons/hopspan_logo1.1.png'
 import leafImage from '../assets/images/leaf-1.png'
+import { Fade } from 'react-awesome-reveal'
+import { Bars } from '@agney/react-loading'
 
 type LocationInfo = {
     city: string
@@ -80,7 +82,13 @@ export const Home = () => {
             setResult(response.data)
             console.log(response.data)
             setTimeout(() => {
-                resultRef.current?.scrollIntoView({ behavior: 'smooth' })
+                const element = resultRef.current
+                if (element) {
+                    const yOffset = -50
+                    const y = element.getBoundingClientRect().top + yOffset
+
+                    window.scrollTo({ top: y, behavior: 'smooth' })
+                }
             }, 100)
         } catch (err) {
             setError('Error fetching data. Make sure the domain is valid.')
@@ -133,7 +141,9 @@ export const Home = () => {
                     />
                     <GreenButton type='submit' style={{ width: '200px' }}>
                         {loading ? (
-                            <img src={loadingBlue} style={{ height: '24px' }} />
+                            <div style={{ width: 24, height: 20 }}>
+                                <Bars />
+                            </div>
                         ) : (
                             <Paragraph16>CALCULATE</Paragraph16>
                         )}
@@ -157,191 +167,200 @@ export const Home = () => {
                         alignItems: 'center',
                     }}
                 >
-                    <Card>
-                        <Header16 style={{ color: '#0a0a0a' }}>
-                            We&rsquo;ve checked{' '}
-                            <span
-                                style={{
-                                    color: '#53ab79',
-                                    fontWeight: 700,
-                                    fontSize: '20px',
-                                }}
-                            >
-                                {result.domainToLookUp}
-                            </span>
-                        </Header16>
-                    </Card>
+                    <Fade direction='up' triggerOnce>
+                        <Card>
+                            <Header16 style={{ color: '#0a0a0a' }}>
+                                We&rsquo;ve checked{' '}
+                                <span
+                                    style={{
+                                        color: '#53ab79',
+                                        fontWeight: 700,
+                                        fontSize: '20px',
+                                    }}
+                                >
+                                    {result.domainToLookUp}
+                                </span>
+                            </Header16>
+                        </Card>
+                    </Fade>
 
-                    <Card>
-                        <Header16 style={{ color: '#0a0a0a' }}>
-                            {result.carbonAmount < 1 ? (
-                                <>
-                                    Nice! This page emits only{' '}
-                                    <span
-                                        style={{
-                                            color: '#53ab79',
-                                            fontWeight: 700,
-                                            fontSize: '20px',
-                                        }}
-                                    >
-                                        {result.carbonAmount.toFixed(3)} grams
-                                    </span>{' '}
-                                    of CO₂ per visit. That’s pretty efficient!
-                                </>
-                            ) : (
-                                <>
-                                    This page emits{' '}
-                                    <span
-                                        style={{
-                                            color: '#ff8383',
-                                            fontWeight: 700,
-                                            fontSize: '20px',
-                                        }}
-                                    >
-                                        {result.carbonAmount.toFixed(3)} grams
-                                    </span>{' '}
-                                    of CO₂ per visit, which is relatively high
-                                    and could be optimized.
-                                </>
-                            )}
-                        </Header16>
-                    </Card>
+                    <Fade direction='up' triggerOnce>
+                        <Card>
+                            <Header16 style={{ color: '#0a0a0a' }}>
+                                {result.carbonAmount < 1 ? (
+                                    <>
+                                        Nice! This page emits only{' '}
+                                        <span
+                                            style={{
+                                                color: '#53ab79',
+                                                fontWeight: 700,
+                                                fontSize: '20px',
+                                            }}
+                                        >
+                                            {result.carbonAmount.toFixed(3)}{' '}
+                                            grams
+                                        </span>{' '}
+                                        of CO₂ per visit. That’s pretty
+                                        efficient!
+                                    </>
+                                ) : (
+                                    <>
+                                        This page emits{' '}
+                                        <span
+                                            style={{
+                                                color: '#ff8383',
+                                                fontWeight: 700,
+                                                fontSize: '20px',
+                                            }}
+                                        >
+                                            {result.carbonAmount.toFixed(3)}{' '}
+                                            grams
+                                        </span>{' '}
+                                        of CO₂ per visit, which is relatively
+                                        high and could be optimized.
+                                    </>
+                                )}
+                            </Header16>
+                        </Card>
+                    </Fade>
 
-                    <Card>
-                        <Header16 style={{ color: '#0a0a0a' }}>
-                            {Number(result.websiteSize) < 1000000 ? (
-                                <>
-                                    With just{' '}
-                                    <span
-                                        style={{
-                                            color: '#53ab79',
-                                            fontWeight: 700,
-                                            fontSize: '20px',
-                                        }}
-                                    >
-                                        {result.websiteSize
-                                            ? formatBytes(
-                                                  Number(result.websiteSize)
-                                              )
-                                            : 'Unavailable'}
-                                    </span>{' '}
-                                    of page weight, this site loads fast and
-                                    light.
-                                </>
-                            ) : (
-                                <>
-                                    At{' '}
-                                    <span
-                                        style={{
-                                            color: '#ff8383',
-                                            fontWeight: 700,
-                                            fontSize: '20px',
-                                        }}
-                                    >
-                                        {result.websiteSize
-                                            ? formatBytes(
-                                                  Number(result.websiteSize)
-                                              )
-                                            : 'Unavailable'}
-                                    </span>
-                                    , this page is heavier than average and may
-                                    impact load speed and emissions.
-                                </>
-                            )}
-                        </Header16>
-                    </Card>
+                    <Fade direction='up' triggerOnce>
+                        <Card>
+                            <Header16 style={{ color: '#0a0a0a' }}>
+                                {Number(result.websiteSize) < 1000000 ? (
+                                    <>
+                                        With just{' '}
+                                        <span
+                                            style={{
+                                                color: '#53ab79',
+                                                fontWeight: 700,
+                                                fontSize: '20px',
+                                            }}
+                                        >
+                                            {result.websiteSize
+                                                ? formatBytes(
+                                                      Number(result.websiteSize)
+                                                  )
+                                                : 'Unavailable'}
+                                        </span>{' '}
+                                        of page weight, this site loads fast and
+                                        light.
+                                    </>
+                                ) : (
+                                    <>
+                                        At{' '}
+                                        <span
+                                            style={{
+                                                color: '#ff8383',
+                                                fontWeight: 700,
+                                                fontSize: '20px',
+                                            }}
+                                        >
+                                            {result.websiteSize
+                                                ? formatBytes(
+                                                      Number(result.websiteSize)
+                                                  )
+                                                : 'Unavailable'}
+                                        </span>
+                                        , this page is heavier than average and
+                                        may impact load speed and emissions.
+                                    </>
+                                )}
+                            </Header16>
+                        </Card>
+                    </Fade>
 
-                    <Card>
-                        <Header16 style={{ color: '#0a0a0a' }}>
-                            {result.isGreen === true ? (
-                                <>
-                                    Awesome! This website is{' '}
-                                    <span
-                                        style={{
-                                            color: '#53ab79',
-                                            fontWeight: 700,
-                                            fontSize: '20px',
-                                        }}
-                                    >
-                                        Green Hosted
-                                    </span>{' '}
-                                    and runs on renewable energy.
-                                </>
-                            ) : (
-                                <>
-                                    Unfortunately, This website is{' '}
-                                    <span
-                                        style={{
-                                            color: '#ff8383',
-                                            fontWeight: 700,
-                                            fontSize: '20px',
-                                        }}
-                                    >
-                                        Not Green Hosted
-                                    </span>{' '}
-                                    and runs on fossil fuel.
-                                </>
-                            )}
-                        </Header16>
-                    </Card>
+                    <Fade direction='up' triggerOnce>
+                        <Card>
+                            <Header16 style={{ color: '#0a0a0a' }}>
+                                {result.isGreen === true ? (
+                                    <>
+                                        Awesome! This website is{' '}
+                                        <span
+                                            style={{
+                                                color: '#53ab79',
+                                                fontWeight: 700,
+                                                fontSize: '20px',
+                                            }}
+                                        >
+                                            Green Hosted
+                                        </span>{' '}
+                                        and runs on renewable energy.
+                                    </>
+                                ) : (
+                                    <>
+                                        Unfortunately, This website is{' '}
+                                        <span
+                                            style={{
+                                                color: '#ff8383',
+                                                fontWeight: 700,
+                                                fontSize: '20px',
+                                            }}
+                                        >
+                                            Not Green Hosted
+                                        </span>{' '}
+                                        and runs on fossil fuel.
+                                    </>
+                                )}
+                            </Header16>
+                        </Card>
+                    </Fade>
 
-                    <Card>
-                        <Header16 style={{ color: '#0a0a0a' }}>
-                            {Number(result.distance) < 1000 ? (
-                                <>
-                                    The server is just{' '}
-                                    <span
-                                        style={{
-                                            color: '#53ab79',
-                                            fontWeight: 700,
-                                            fontSize: '20px',
-                                        }}
-                                    >
-                                        {result.distance} km
-                                    </span>{' '}
-                                    away - great for fast, efficient access.
-                                </>
-                            ) : (
-                                <>
-                                    The server is located{' '}
-                                    <span
-                                        style={{
-                                            color: '#ff8383',
-                                            fontWeight: 700,
-                                            fontSize: '20px',
-                                        }}
-                                    >
-                                        {result.distance} km
-                                    </span>{' '}
-                                    away, which may lead to slower response
-                                    times and higher emissions.
-                                </>
-                            )}
-                        </Header16>
-                    </Card>
+                    <Fade direction='up' triggerOnce>
+                        <Card>
+                            <Header16 style={{ color: '#0a0a0a' }}>
+                                {Number(result.distance) < 1000 ? (
+                                    <>
+                                        The server is just{' '}
+                                        <span
+                                            style={{
+                                                color: '#53ab79',
+                                                fontWeight: 700,
+                                                fontSize: '20px',
+                                            }}
+                                        >
+                                            {result.distance} km
+                                        </span>{' '}
+                                        away - great for fast, efficient access.
+                                    </>
+                                ) : (
+                                    <>
+                                        The server is located{' '}
+                                        <span
+                                            style={{
+                                                color: '#ff8383',
+                                                fontWeight: 700,
+                                                fontSize: '20px',
+                                            }}
+                                        >
+                                            {result.distance} km
+                                        </span>{' '}
+                                        away, which may lead to slower response
+                                        times and higher emissions.
+                                    </>
+                                )}
+                            </Header16>
+                        </Card>
+                    </Fade>
 
-                    <Card style={{ gap: '8px' }}>
-                        <LocationHeader>
-                            <Header20 style={{ color: '#0a0a0a' }}>
-                                Location
-                            </Header20>
-                            <Header20
-                                style={{ color: '#53ab79', fontWeight: 700 }}
-                            >
-                                {result.serverLocation.city},{' '}
-                                {result.serverLocation.country}
-                            </Header20>
-                        </LocationHeader>
-                        <MapView
-                            center={{
-                                lat: parseFloat(result.clientLocation.latitude),
-                                lng: parseFloat(
-                                    result.clientLocation.longitude
-                                ),
-                                label: 'Your Location',
-                            }}
-                            markers={[
-                                {
+                    <Fade direction='up' triggerOnce>
+                        <Card style={{ gap: '8px' }}>
+                            <LocationHeader>
+                                <Header20 style={{ color: '#0a0a0a' }}>
+                                    Location
+                                </Header20>
+                                <Header20
+                                    style={{
+                                        color: '#53ab79',
+                                        fontWeight: 700,
+                                    }}
+                                >
+                                    {result.serverLocation.city},{' '}
+                                    {result.serverLocation.country}
+                                </Header20>
+                            </LocationHeader>
+                            <MapView
+                                center={{
                                     lat: parseFloat(
                                         result.clientLocation.latitude
                                     ),
@@ -349,31 +368,44 @@ export const Home = () => {
                                         result.clientLocation.longitude
                                     ),
                                     label: 'Your Location',
-                                },
-                                {
-                                    lat: parseFloat(
-                                        result.serverLocation.latitude
-                                    ),
-                                    lng: parseFloat(
-                                        result.serverLocation.longitude
-                                    ),
-                                    label: 'Server Location',
-                                },
-                            ]}
-                        />
-                    </Card>
+                                }}
+                                markers={[
+                                    {
+                                        lat: parseFloat(
+                                            result.clientLocation.latitude
+                                        ),
+                                        lng: parseFloat(
+                                            result.clientLocation.longitude
+                                        ),
+                                        label: 'Your Location',
+                                    },
+                                    {
+                                        lat: parseFloat(
+                                            result.serverLocation.latitude
+                                        ),
+                                        lng: parseFloat(
+                                            result.serverLocation.longitude
+                                        ),
+                                        label: 'Server Location',
+                                    },
+                                ]}
+                            />
+                        </Card>
+                    </Fade>
 
-                    <GreenButton
-                        type='submit'
-                        style={{
-                            width: '320px',
-                            marginBottom: '64px',
-                            marginTop: '16px',
-                        }}
-                        onClick={handleScanAnother}
-                    >
-                        <Header16>Analyze Another Site</Header16>
-                    </GreenButton>
+                    <Fade direction='up' triggerOnce>
+                        <GreenButton
+                            type='submit'
+                            style={{
+                                width: '328px',
+                                marginBottom: '64px',
+                                marginTop: '16px',
+                            }}
+                            onClick={handleScanAnother}
+                        >
+                            <Header16>CALCULATE ANOTHER SITE</Header16>
+                        </GreenButton>
+                    </Fade>
                 </div>
             )}
         </HomeBackground>
