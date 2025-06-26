@@ -139,7 +139,11 @@ export const Home = () => {
                         message={error}
                         status={error ? 'error' : ''}
                     />
-                    <GreenButton type='submit' style={{ width: '200px' }}>
+                    <GreenButton
+                        type='submit'
+                        style={{ width: '200px' }}
+                        data-testid='calculate-button'
+                    >
                         {loading ? (
                             <div style={{ width: 24, height: 20 }}>
                                 <Bars />
@@ -180,6 +184,7 @@ export const Home = () => {
                                 >
                                     {result.domainToLookUp}
                                 </span>
+                                , and this is what we found:
                             </Header16>
                         </Card>
                     </Fade>
