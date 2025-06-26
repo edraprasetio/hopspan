@@ -96,7 +96,7 @@ export const LocationHeader = styled.div`
     justify-content: space-between;
     width: 100%;
     @media (max-width: ${(props) => props.theme.breakPoints.phone}) {
-        // flex-direction: column;
+        flex-direction: column;
         // align-items: center;
     }
 `

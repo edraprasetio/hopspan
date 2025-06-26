@@ -65,7 +65,7 @@ const CustomInput = ({ label, status, message, ...inputProps }: any) => {
                 className={status === 'error' ? 'error' : ''}
             />
             {displayedMessage && (
-                <StyledMessage>
+                <StyledMessage data-testid='input-error'>
                     <Paragraph14>{displayedMessage}</Paragraph14>
                 </StyledMessage>
             )}
