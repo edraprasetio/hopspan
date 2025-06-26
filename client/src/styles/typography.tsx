@@ -33,6 +33,9 @@ export const Header40 = styled.div`
 export const Header64 = styled.div`
     font-family: Lato-Bold;
     font-size: 64px;
+    @media (max-width: ${(props) => props.theme.breakPoints.phone}) {
+        font-size: 48px;
+    }
 `
 export const Paragraph12 = styled.div`
     font-family: PlusJakartaSans-Light;

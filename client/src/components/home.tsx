@@ -21,6 +21,12 @@ export const HeaderWrapper = styled.div`
     width: 640px;
     text-align: center;
     margin-bottom: 32px;
+
+    @media (max-width: ${(props) => props.theme.breakPoints.phone}) {
+        width: unset;
+        margin-left: 16px;
+        margin-right: 16px;
+    }
 `
 
 export const TopRightImage = styled.img`
@@ -89,8 +95,8 @@ export const LocationHeader = styled.div`
     display: flex;
     justify-content: space-between;
     width: 100%;
-    @media (max-width: ${(props) => props.theme.breakPoints.largePhone}) {
-        flex-direction: column;
-        align-items: center;
+    @media (max-width: ${(props) => props.theme.breakPoints.phone}) {
+        // flex-direction: column;
+        // align-items: center;
     }
 `

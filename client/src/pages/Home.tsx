@@ -7,7 +7,7 @@ import {
     SubCardWrapper,
     TopRightImage,
 } from '../components/home'
-import { Card } from '../components/atoms/card'
+import { Card, CardsContainer } from '../components/atoms/card'
 import axios from 'axios'
 import MapView from '../components/atoms/map'
 import {
@@ -118,60 +118,56 @@ export const Home = () => {
                     travels, and where it&rsquo;s hosted.
                 </Header20>
             </HeaderWrapper>
-            <Card ref={inputRef} style={{ marginBottom: '64px' }}>
-                <form
-                    onSubmit={handleSubmit}
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '32px',
-                        alignItems: 'center',
-                        width: '100%',
-                    }}
-                >
-                    <CustomInput
-                        label='Website Link'
-                        value={domain}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setDomain(e.target.value)
-                        }
-                        placeholder='Enter domain (e.g. yahoo.com)'
-                        message={error}
-                        status={error ? 'error' : ''}
-                    />
-                    <GreenButton
-                        type='submit'
-                        style={{ width: '200px' }}
-                        data-testid='calculate-button'
+            <CardsContainer>
+                <Card ref={inputRef} style={{ marginBottom: '64px' }}>
+                    <form
+                        onSubmit={handleSubmit}
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '32px',
+                            alignItems: 'center',
+                            width: '100%',
+                        }}
                     >
-                        {loading ? (
-                            <div style={{ width: 24, height: 20 }}>
-                                <Bars />
-                            </div>
-                        ) : (
-                            <Paragraph16>CALCULATE</Paragraph16>
-                        )}
-                    </GreenButton>
-                </form>
+                        <CustomInput
+                            label='Website Link'
+                            value={domain}
+                            onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                            ) => setDomain(e.target.value)}
+                            placeholder='Enter domain (e.g. yahoo.com)'
+                            message={error}
+                            status={error ? 'error' : ''}
+                        />
+                        <GreenButton
+                            type='submit'
+                            style={{ width: '200px' }}
+                            data-testid='calculate-button'
+                        >
+                            {loading ? (
+                                <div style={{ width: 24, height: 20 }}>
+                                    <Bars />
+                                </div>
+                            ) : (
+                                <Paragraph16>CALCULATE</Paragraph16>
+                            )}
+                        </GreenButton>
+                    </form>
 
-                <Paragraph14 style={{ textAlign: 'center', color: '#67687b' }}>
-                    <span style={{ color: '#ff8383' }}>*</span>By using HopSpan,
-                    you agree that the domain you submit may be processed and
-                    stored for analytical and educational purposes.
-                </Paragraph14>
-            </Card>
+                    <Paragraph14
+                        style={{ textAlign: 'center', color: '#67687b' }}
+                    >
+                        <span style={{ color: '#ff8383' }}>*</span>By using
+                        HopSpan, you agree that the domain you submit may be
+                        processed and stored for analytical and educational
+                        purposes.
+                    </Paragraph14>
+                </Card>
+            </CardsContainer>
             {result && (
-                <div
-                    ref={resultRef}
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '16px',
-                        color: '#B0B0BC',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Fade direction='up' triggerOnce>
+                <Fade direction='up' triggerOnce>
+                    <CardsContainer ref={resultRef}>
                         <Card>
                             <Header16 style={{ color: '#0a0a0a' }}>
                                 We&rsquo;ve checked{' '}
@@ -187,9 +183,7 @@ export const Home = () => {
                                 , and this is what we found:
                             </Header16>
                         </Card>
-                    </Fade>
 
-                    <Fade direction='up' triggerOnce>
                         <Card>
                             <Header16 style={{ color: '#0a0a0a' }}>
                                 {result.carbonAmount < 1 ? (
@@ -227,9 +221,7 @@ export const Home = () => {
                                 )}
                             </Header16>
                         </Card>
-                    </Fade>
 
-                    <Fade direction='up' triggerOnce>
                         <Card>
                             <Header16 style={{ color: '#0a0a0a' }}>
                                 {Number(result.websiteSize) < 1000000 ? (
@@ -273,9 +265,7 @@ export const Home = () => {
                                 )}
                             </Header16>
                         </Card>
-                    </Fade>
 
-                    <Fade direction='up' triggerOnce>
                         <Card>
                             <Header16 style={{ color: '#0a0a0a' }}>
                                 {result.isGreen === true ? (
@@ -309,9 +299,7 @@ export const Home = () => {
                                 )}
                             </Header16>
                         </Card>
-                    </Fade>
 
-                    <Fade direction='up' triggerOnce>
                         <Card>
                             <Header16 style={{ color: '#0a0a0a' }}>
                                 {Number(result.distance) < 1000 ? (
@@ -346,9 +334,7 @@ export const Home = () => {
                                 )}
                             </Header16>
                         </Card>
-                    </Fade>
 
-                    <Fade direction='up' triggerOnce>
                         <Card style={{ gap: '8px' }}>
                             <LocationHeader>
                                 <Header20 style={{ color: '#0a0a0a' }}>
@@ -396,9 +382,7 @@ export const Home = () => {
                                 ]}
                             />
                         </Card>
-                    </Fade>
 
-                    <Fade direction='up' triggerOnce>
                         <GreenButton
                             type='submit'
                             style={{
@@ -410,8 +394,8 @@ export const Home = () => {
                         >
                             <Header16>CALCULATE ANOTHER SITE</Header16>
                         </GreenButton>
-                    </Fade>
-                </div>
+                    </CardsContainer>
+                </Fade>
             )}
         </HomeBackground>
     )
