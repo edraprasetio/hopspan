@@ -7,6 +7,7 @@ const { estimateCO2 } = require("./utils/carbonEstimator");
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const puppeteerExtra = require("puppeteer-extra");
+const { connectToDB } = require("./utils/db");
 
 const app = express();
 app.use(cors());
@@ -29,13 +30,29 @@ function haversine(lat1, lon1, lat2, lon2) {
 }
 
 async function getHtmlSize(rawUrl) {
+  console.log("Fetching url:", rawUrl)
   const url =
     rawUrl.startsWith("http://") || rawUrl.startsWith("https://")
       ? rawUrl
       : `https://${rawUrl}`;
 
-  const browser = await puppeteerExtra.launch({ headless: true });
+  console.log("Clean url:", rawUrl)
+
+  const browser = await puppeteer.launch({
+    headless: true,
+    executablePath: '/usr/bin/chromium', // or wherever Chromium is installed
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--single-process',
+      '--no-zygote',
+    ],
+  });
   const page = await browser.newPage();
+
+  console.log("Can I get the puppeteer stuff?")
 
   let totalBytes = 0;
 
@@ -89,38 +106,22 @@ async function getWebsiteSize(rawUrl) {
   }
 }
 
-async function findWebsiteSize(rawUrl) {
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
-
-  let totalBytes = 0;
-
-  const url =
-    rawUrl.startsWith("http://") || rawUrl.startsWith("https://")
-      ? rawUrl
-      : `https://${rawUrl}`;
-
-  console.log("Playwright Fetched url:", url);
-
-  page.on("response", async (response) => {
-    try {
-      const buffer = await response.body();
-      totalBytes += buffer.length;
-    } catch (e) {
-      // Ignore responses with no body (e.g. redirects or 304s)
-    }
-  });
-
+app.get("/api/lookup", async (req, res) => {
   try {
-    await page.goto(url, { waitUntil: "networkidle" });
-  } catch (err) {
-    console.error("Failed to load page:", err.message);
-    totalBytes = 0;
-  }
+    const db = await connectToDB();
+    const collection = db.collection('calculations');
 
-  await browser.close();
-  return totalBytes;
-}
+    const allCalculations = await collection
+      .find({})
+      .sort({ createdAt: -1 }) // optional: newest first
+      .toArray();
+
+    res.status(200).json(allCalculations);
+  } catch (err) {
+    console.error('Error fetching calculations:', err);
+    res.status(500).json({ error: 'Failed to fetch calculations' });
+  }
+});
 
 app.post("/api/lookup", async (req, res) => {
   const { domain } = req.body;
@@ -137,7 +138,7 @@ app.post("/api/lookup", async (req, res) => {
     }
     console.log("Size of website is:", websiteSize);
 
-    const carbonAmount = estimateCO2(websiteSize);
+    const carbonAmount = Number(estimateCO2(websiteSize));
 
     console.log("CO2:", carbonAmount.toFixed(3));
 
@@ -163,7 +164,7 @@ app.post("/api/lookup", async (req, res) => {
       parseFloat(server.longitude)
     );
 
-    res.json({
+    const result = {
       domainToLookUp,
       websiteSize,
       isGreen,
@@ -181,7 +182,15 @@ app.post("/api/lookup", async (req, res) => {
         longitude: client.longitude,
       },
       distance: distance.toFixed(2),
-    });
+      createdAt: new Date()
+    };
+    
+    const db = await connectToDB();
+    const collection = db.collection('calculations');
+    await collection.insertOne(result);
+    
+    res.status(200).json(result);
+
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch data" });
   }

@@ -13,15 +13,13 @@ import MapView from '../components/atoms/map'
 import {
     Header16,
     Header20,
-    Header32,
     Header64,
     Paragraph14,
     Paragraph16,
 } from '../styles/typography'
 import CustomInput from '../components/atoms/input'
-import { GreenButton, WhiteButton } from '../components/atoms/button'
-import loadingBlue from '../assets/icons/loading_blue.svg'
-import hopSpanLogo from '../assets/icons/hopspan_logo1.1.png'
+import { GreenButton } from '../components/atoms/button'
+
 import leafImage from '../assets/images/leaf-1.png'
 import { Fade } from 'react-awesome-reveal'
 import { Bars } from '@agney/react-loading'
@@ -322,8 +320,8 @@ export const Home = () => {
                                             >
                                                 {result.distance} km
                                             </span>{' '}
-                                            away - great for fast, efficient
-                                            access.
+                                            away from you. Great for fast,
+                                            efficient access.
                                         </>
                                     ) : (
                                         <>
@@ -337,8 +335,9 @@ export const Home = () => {
                                             >
                                                 {result.distance} km
                                             </span>{' '}
-                                            away, which may lead to slower
-                                            response times and higher emissions.
+                                            away from you, which may lead to
+                                            slower response times and higher
+                                            emissions.
                                         </>
                                     )}
                                 </Header16>
