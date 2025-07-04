@@ -20,12 +20,12 @@ describe('template spec', () => {
 
         cy.visit('http://localhost:3000')
 
-        cy.get('[data-testid="url-input"]').type('yahoo.com')
+        cy.get('[data-testid="url-input"]').type('google.com')
 
         cy.get('[data-testid="calculate-button"]').click()
 
         cy.wait('@postLookup')
             .its('request.body.domain')
-            .should('eq', 'yahoo.com')
+            .should('eq', 'google.com')
     })
 })

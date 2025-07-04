@@ -8,6 +8,7 @@ const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const puppeteerExtra = require("puppeteer-extra");
 const { connectToDB } = require("./utils/db");
+const { calculateLatency } = require("./utils/latencyEstimator");
 
 const app = express();
 app.use(cors());
@@ -30,29 +31,29 @@ function haversine(lat1, lon1, lat2, lon2) {
 }
 
 async function getHtmlSize(rawUrl) {
-  console.log("Fetching url:", rawUrl)
+  console.log("Fetching url:", rawUrl);
   const url =
     rawUrl.startsWith("http://") || rawUrl.startsWith("https://")
       ? rawUrl
       : `https://${rawUrl}`;
 
-  console.log("Clean url:", rawUrl)
+  console.log("Clean url:", rawUrl);
 
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath: '/usr/bin/chromium', // or wherever Chromium is installed
+    executablePath: "/usr/bin/chromium", // or wherever Chromium is installed
     args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu',
-      '--single-process',
-      '--no-zygote',
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu",
+      "--single-process",
+      "--no-zygote",
     ],
   });
   const page = await browser.newPage();
 
-  console.log("Can I get the puppeteer stuff?")
+  console.log("Can I get the puppeteer stuff?");
 
   let totalBytes = 0;
 
@@ -109,7 +110,7 @@ async function getWebsiteSize(rawUrl) {
 app.get("/api/lookup", async (req, res) => {
   try {
     const db = await connectToDB();
-    const collection = db.collection('calculations');
+    const collection = db.collection("calculations");
 
     const allCalculations = await collection
       .find({})
@@ -118,13 +119,13 @@ app.get("/api/lookup", async (req, res) => {
 
     res.status(200).json(allCalculations);
   } catch (err) {
-    console.error('Error fetching calculations:', err);
-    res.status(500).json({ error: 'Failed to fetch calculations' });
+    console.error("Error fetching calculations:", err);
+    res.status(500).json({ error: "Failed to fetch calculations" });
   }
 });
 
 app.post("/api/lookup", async (req, res) => {
-  const { domain } = req.body;
+  const { domain, bandwidth } = req.body;
   // console.log("Incoming request body:", domain);
   // console.log("Response type:", typeof domain);
 
@@ -150,6 +151,8 @@ app.post("/api/lookup", async (req, res) => {
 
     console.log("Green Web:", isGreen);
 
+    console.log("Bandwith is:", bandwidth);
+
     const { address: ip } = await dns.lookup(domainToLookUp);
     const serverInfo = await axios.get(`https://ipapi.co/${ip}/json/`);
     const clientInfo = await axios.get("https://ipapi.co/json/");
@@ -163,6 +166,9 @@ app.post("/api/lookup", async (req, res) => {
       parseFloat(server.latitude),
       parseFloat(server.longitude)
     );
+
+    const latency = calculateLatency(bandwidth, websiteSize, distance);
+    console.log("Latency is:", latency);
 
     const result = {
       domainToLookUp,
@@ -182,15 +188,17 @@ app.post("/api/lookup", async (req, res) => {
         longitude: client.longitude,
       },
       distance: distance.toFixed(2),
-      createdAt: new Date()
+      latency: latency.toFixed(2),
+      createdAt: new Date(),
     };
-    
-    const db = await connectToDB();
-    const collection = db.collection('calculations');
-    await collection.insertOne(result);
-    
-    res.status(200).json(result);
 
+    console.log("Results:", result);
+
+    const db = await connectToDB();
+    const collection = db.collection("calculations");
+    await collection.insertOne(result);
+
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch data" });
   }

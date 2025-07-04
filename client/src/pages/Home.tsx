@@ -3,8 +3,6 @@ import {
     HeaderWrapper,
     HomeBackground,
     LocationHeader,
-    SubCard,
-    SubCardWrapper,
     TopRightImage,
 } from '../components/home'
 import { Card, CardsContainer } from '../components/atoms/card'
@@ -23,6 +21,7 @@ import { GreenButton } from '../components/atoms/button'
 import leafImage from '../assets/images/leaf-1.png'
 import { Fade } from 'react-awesome-reveal'
 import { Bars } from '@agney/react-loading'
+import BandwidthSlider from '../components/atoms/slider'
 
 type LocationInfo = {
     city: string
@@ -40,6 +39,7 @@ type Result = {
     serverLocation: LocationInfo
     clientLocation: LocationInfo
     distance: string
+    latency: number
 }
 
 const formatBytes = (bytes: number, decimals = 2): string => {
@@ -58,6 +58,7 @@ export const Home = () => {
     const resultRef = useRef<HTMLDivElement | null>(null)
     const inputRef = useRef<HTMLDivElement | null>(null)
     const [loading, setLoading] = useState(false)
+    const [bandwidth, setBandwidth] = useState(100)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -68,14 +69,15 @@ export const Home = () => {
         }
 
         setError('')
-        setDomain('')
         setResult(null)
         setLoading(true)
+        setDomain('')
+        console.log('Bandwidth is:', bandwidth)
 
         try {
             const response = await axios.post(
                 'http://localhost:5000/api/lookup',
-                { domain }
+                { domain, bandwidth }
             )
             setResult(response.data)
             console.log(response.data)
@@ -108,12 +110,12 @@ export const Home = () => {
                         TRACE YOUR SITE&rsquo;S
                     </Header64>
                     <Header64 style={{ textAlign: 'center', color: '#53ab79' }}>
-                        DIGITAL FOOTPRINT
+                        LATENCY PROFILE
                     </Header64>
                 </div>
                 <Header20 style={{ letterSpacing: '1px' }}>
-                    See how much CO₂ your website emits, how far your data
-                    travels, and where it&rsquo;s hosted.
+                    See how far your data travels, how fast it moves, and where
+                    your server lives.
                 </Header20>
             </HeaderWrapper>
             <CardsContainer>
@@ -138,6 +140,10 @@ export const Home = () => {
                             placeholder='Enter domain (e.g. yahoo.com)'
                             message={error}
                             status={error ? 'error' : ''}
+                        />
+                        <BandwidthSlider
+                            bandwidth={bandwidth}
+                            setBandwidth={setBandwidth}
                         />
                         <GreenButton
                             type='submit'
@@ -186,6 +192,44 @@ export const Home = () => {
 
                             <Card>
                                 <Header16 style={{ color: '#0a0a0a' }}>
+                                    {result.latency < 200 ? (
+                                        <>
+                                            The connection latency is
+                                            <span
+                                                style={{
+                                                    color: '#53ab79',
+                                                    fontWeight: 700,
+                                                    fontSize: '20px',
+                                                }}
+                                            >
+                                                {result.latency} ms
+                                            </span>
+                                            , which is considered low and
+                                            supports fast, responsive
+                                            communication.
+                                        </>
+                                    ) : (
+                                        <>
+                                            The connection latency is
+                                            <span
+                                                style={{
+                                                    color: '#ff8383',
+                                                    fontWeight: 700,
+                                                    fontSize: '20px',
+                                                }}
+                                            >
+                                                {result.latency} ms
+                                            </span>
+                                            , which is relatively high and may
+                                            result in slower page loads or
+                                            delays in data transfer.
+                                        </>
+                                    )}
+                                </Header16>
+                            </Card>
+
+                            {/* <Card>
+                                <Header16 style={{ color: '#0a0a0a' }}>
                                     {result.carbonAmount < 1 ? (
                                         <>
                                             Nice! This page emits only{' '}
@@ -221,7 +265,7 @@ export const Home = () => {
                                         </>
                                     )}
                                 </Header16>
-                            </Card>
+                            </Card> */}
 
                             <Card>
                                 <Header16 style={{ color: '#0a0a0a' }}>
