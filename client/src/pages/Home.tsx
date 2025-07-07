@@ -194,7 +194,7 @@ export const Home = () => {
                                 <Header16 style={{ color: '#0a0a0a' }}>
                                     {result.latency < 200 ? (
                                         <>
-                                            The connection latency is
+                                            The connection latency is{' '}
                                             <span
                                                 style={{
                                                     color: '#53ab79',
@@ -210,7 +210,7 @@ export const Home = () => {
                                         </>
                                     ) : (
                                         <>
-                                            The connection latency is
+                                            The connection latency is{' '}
                                             <span
                                                 style={{
                                                     color: '#ff8383',
