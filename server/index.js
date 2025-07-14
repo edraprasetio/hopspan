@@ -2,7 +2,6 @@ const express = require("express");
 const axios = require("axios");
 const dns = require("dns").promises;
 const cors = require("cors");
-const { chromium } = require("playwright");
 const { estimateCO2 } = require("./utils/carbonEstimator");
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
@@ -132,8 +131,10 @@ app.post("/api/lookup", async (req, res) => {
   const domainToLookUp = domain.replace(/^https?:\/\//, "").split("/")[0];
 
   try {
+    const sizeUnavailable = 0
+    
     let websiteSize = await getHtmlSize(domain);
-    if (websiteSize === 0) {
+    if (websiteSize === sizeUnavailable) {
       console.log("Fallback: using Axios to calculate website size...");
       websiteSize = await getWebsiteSize(domain);
     }
