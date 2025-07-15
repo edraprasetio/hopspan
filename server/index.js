@@ -7,7 +7,7 @@ const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const puppeteerExtra = require("puppeteer-extra");
 const { connectToDB } = require("./utils/db");
 const { calculateLatency } = require("./utils/latencyEstimator");
-const { getHtmlSize } = require("./utils/getHtmlSize");
+const { getHtmlSize, getContentLength } = require("./utils/getHtmlSize");
 const { haversine } = require("./utils/haversine");
 
 const app = express();
@@ -15,30 +15,6 @@ app.use(cors());
 app.use(express.json());
 
 puppeteerExtra.use(StealthPlugin());
-
-async function getWebsiteSize(rawUrl) {
-  const url =
-    rawUrl.startsWith("http://") || rawUrl.startsWith("https://")
-      ? rawUrl
-      : `https://${rawUrl}`;
-
-  console.log("Axios Fetched url:", url);
-
-  try {
-    const response = await axios.get(url, {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
-        Accept: "text/html",
-      },
-    });
-    const sizeInBytes = response.data.length;
-    console.log(`Size: ${sizeInBytes} bytes`);
-    return sizeInBytes;
-  } catch (error) {
-    console.error("Error fetching site:", error.message);
-  }
-}
 
 app.get("/api/lookup", async (req, res) => {
   try {
@@ -65,10 +41,11 @@ app.post("/api/lookup", async (req, res) => {
   try {
     const sizeUnavailable = 0
     
-    let websiteSize = await getHtmlSize(domain);
+    let websiteSize = await getContentLength(domain);
+    console.log("Axios Result:", websiteSize);
     if (websiteSize === sizeUnavailable) {
-      console.log("Fallback: using Axios to calculate website size...");
-      websiteSize = await getWebsiteSize(domain);
+      console.log("Fallback: using Puppeteer to calculate website size...");
+      websiteSize = await getHtmlSize(domain);
     }
     console.log("Size of website is:", websiteSize);
 
@@ -76,22 +53,18 @@ app.post("/api/lookup", async (req, res) => {
 
     console.log("CO2:", carbonAmount.toFixed(3));
 
-    const greenWeb = await axios.get(
-      `https://api.thegreenwebfoundation.org/api/v3/greencheck/${domainToLookUp}`
-    );
-
-    const isGreen = greenWeb.data.green;
-
-    console.log("Green Web:", isGreen);
-
     console.log("Bandwith is:", bandwidth);
-
     const { address: ip } = await dns.lookup(domainToLookUp);
-    const serverInfo = await axios.get(`https://ipapi.co/${ip}/json/`);
-    const clientInfo = await axios.get("https://ipapi.co/json/");
 
-    const server = serverInfo.data;
-    const client = clientInfo.data;
+    const [
+      { data: server},
+      { data: client},
+      { data : {green: isGreen}}
+    ] = await Promise.all([
+      axios.get(`https://ipapi.co/${ip}/json/`),
+      axios.get("https://ipapi.co/json/"),
+      axios.get(`https://api.thegreenwebfoundation.org/api/v3/greencheck/${domainToLookUp}`)
+    ])
 
     const distance = haversine(
       parseFloat(client.latitude),

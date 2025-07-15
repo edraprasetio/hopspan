@@ -42,4 +42,18 @@ async function getHtmlSize(rawUrl) {
     return totalBytes;
 }
 
-module.exports = { getHtmlSize };
+async function getContentLength(rawUrl) {
+
+  const url =
+    rawUrl.startsWith("http://") || rawUrl.startsWith("https://")
+      ? rawUrl
+      : `https://${rawUrl}`;
+
+  try {
+    const { headers } = await axios.head(url, { timeout: 8000 });
+    if (headers['content-length']) return +headers['content-length'];
+  } catch {/* ignore */}
+  return 0;
+}
+
+module.exports = { getHtmlSize, getContentLength };
