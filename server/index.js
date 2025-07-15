@@ -3,84 +3,18 @@ const axios = require("axios");
 const dns = require("dns").promises;
 const cors = require("cors");
 const { estimateCO2 } = require("./utils/carbonEstimator");
-const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const puppeteerExtra = require("puppeteer-extra");
 const { connectToDB } = require("./utils/db");
 const { calculateLatency } = require("./utils/latencyEstimator");
+const { getHtmlSize } = require("./utils/getHtmlSize");
+const { haversine } = require("./utils/haversine");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 puppeteerExtra.use(StealthPlugin());
-
-function haversine(lat1, lon1, lat2, lon2) {
-  const R = 6371;
-  const toRad = (deg) => (deg * Math.PI) / 180;
-
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-async function getHtmlSize(rawUrl) {
-  console.log("Fetching url:", rawUrl);
-  const url =
-    rawUrl.startsWith("http://") || rawUrl.startsWith("https://")
-      ? rawUrl
-      : `https://${rawUrl}`;
-
-  console.log("Clean url:", rawUrl);
-
-  const browser = await puppeteer.launch({
-    headless: true,
-    executablePath: "/usr/bin/chromium", // or wherever Chromium is installed
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu",
-      "--single-process",
-      "--no-zygote",
-    ],
-  });
-  const page = await browser.newPage();
-
-  console.log("Can I get the puppeteer stuff?");
-
-  let totalBytes = 0;
-
-  page.on("response", async (response) => {
-    try {
-      const status = response.status();
-
-      // Ignore redirect responses
-      if (status >= 300 && status < 400) return;
-
-      // Only process responses with a body
-      const buffer = await response.buffer();
-      totalBytes += buffer.length;
-    } catch (err) {
-      // Ignore unreadable responses
-    }
-  });
-
-  try {
-    console.log(`Navigating to ${url}`);
-    await page.goto(url, { waitUntil: "networkidle2" });
-  } catch (error) {
-    console.error("Failed to load page:", error.message);
-  }
-
-  await browser.close();
-  return totalBytes;
-}
 
 async function getWebsiteSize(rawUrl) {
   const url =
@@ -113,7 +47,7 @@ app.get("/api/lookup", async (req, res) => {
 
     const allCalculations = await collection
       .find({})
-      .sort({ createdAt: -1 }) // optional: newest first
+      .sort({ createdAt: -1 })
       .toArray();
 
     res.status(200).json(allCalculations);
@@ -125,8 +59,6 @@ app.get("/api/lookup", async (req, res) => {
 
 app.post("/api/lookup", async (req, res) => {
   const { domain, bandwidth } = req.body;
-  // console.log("Incoming request body:", domain);
-  // console.log("Response type:", typeof domain);
 
   const domainToLookUp = domain.replace(/^https?:\/\//, "").split("/")[0];
 
