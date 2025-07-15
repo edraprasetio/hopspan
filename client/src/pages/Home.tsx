@@ -72,7 +72,12 @@ export const Home = () => {
         setResult(null)
         setLoading(true)
         setDomain('')
-        console.log('Bandwidth is:', bandwidth)
+
+        const t0 = performance.now()
+        const timerId = setInterval(() => {
+            // const elapsed = (performance.now() - t0).toFixed(0)
+            // // console.log(`⏱  ${elapsed} ms`)
+        }, 100)
 
         try {
             const response = await axios.post(
@@ -94,6 +99,9 @@ export const Home = () => {
             setError('Error fetching data. Make sure the domain is valid.')
         } finally {
             setLoading(false)
+            clearInterval(timerId)
+            const total = (performance.now() - t0).toFixed(0)
+            console.log(`Finished in ${total} ms`)
         }
     }
 

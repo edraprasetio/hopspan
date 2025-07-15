@@ -66,6 +66,10 @@ app.post("/api/lookup", async (req, res) => {
       axios.get(`https://api.thegreenwebfoundation.org/api/v3/greencheck/${domainToLookUp}`)
     ])
 
+    console.log(server)
+    console.log(client)
+    console.log(isGreen)
+
     const distance = haversine(
       parseFloat(client.latitude),
       parseFloat(client.longitude),

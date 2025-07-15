@@ -9,7 +9,7 @@ async function connectToDB() {
   if (!db) {
     await client.connect();
     db = client.db('hopspan'); // Database name
-    console.log('✅ Connected to MongoDB');
+    console.log('Connected to MongoDB');
   }
   return db;
 }
