@@ -277,7 +277,7 @@ export const Home = () => {
 
                             <Card>
                                 <Header16 style={{ color: '#0a0a0a' }}>
-                                    {Number(result.websiteSize) < 1000000 ? (
+                                    {Number(result.websiteSize) < 2100000 ? (
                                         <>
                                             With just{' '}
                                             <span
@@ -360,7 +360,7 @@ export const Home = () => {
 
                             <Card>
                                 <Header16 style={{ color: '#0a0a0a' }}>
-                                    {Number(result.distance) < 1000 ? (
+                                    {Number(result.distance) < 1500 ? (
                                         <>
                                             The server is just{' '}
                                             <span

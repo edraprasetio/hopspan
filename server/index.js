@@ -39,14 +39,15 @@ app.post("/api/lookup", async (req, res) => {
   const domainToLookUp = domain.replace(/^https?:\/\//, "").split("/")[0];
 
   try {
-    const sizeUnavailable = 0
+    const sizeUnavailable = undefined
     
-    let websiteSize = await getContentLength(domain);
-    console.log("Axios Result:", websiteSize);
-    if (websiteSize === sizeUnavailable) {
-      console.log("Fallback: using Puppeteer to calculate website size...");
-      websiteSize = await getHtmlSize(domain);
-    }
+    let websiteSize = await getHtmlSize(domain);
+    // let websiteSize = await getContentLength(domain);
+    // console.log("Axios Result:", websiteSize);
+    // if (websiteSize === sizeUnavailable) {
+    //   console.log("Fallback: using Puppeteer to calculate website size...");
+    //   websiteSize = await getHtmlSize(domain);
+    // }
     console.log("Size of website is:", websiteSize);
 
     const carbonAmount = Number(estimateCO2(websiteSize));
@@ -66,8 +67,8 @@ app.post("/api/lookup", async (req, res) => {
       axios.get(`https://api.thegreenwebfoundation.org/api/v3/greencheck/${domainToLookUp}`)
     ])
 
-    console.log(server)
-    console.log(client)
+    // console.log(server)
+    // console.log(client)
     console.log(isGreen)
 
     const distance = haversine(
@@ -102,7 +103,7 @@ app.post("/api/lookup", async (req, res) => {
       createdAt: new Date(),
     };
 
-    console.log("Results:", result);
+    // console.log("Results:", result);
 
     const db = await connectToDB();
     const collection = db.collection("calculations");

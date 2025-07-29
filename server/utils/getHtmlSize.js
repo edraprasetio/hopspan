@@ -13,7 +13,7 @@ async function getHtmlSize(rawUrl) {
     const browser = await getBrowser();
     const page = await browser.newPage();
 
-    console.log("Can I get the puppeteer stuff?");
+    // console.log("Can I get the puppeteer stuff?");
 
     let totalBytes = 0;
 
@@ -35,6 +35,7 @@ async function getHtmlSize(rawUrl) {
     try {
         console.log(`Navigating to ${url}`);
         await page.goto(url, { waitUntil: "networkidle2" });
+        await page.waitForTimeout(3000);
     } catch (error) {
         console.error("Failed to load page:", error.message);
     }
@@ -50,11 +51,25 @@ async function getContentLength(rawUrl) {
       ? rawUrl
       : `https://${rawUrl}`;
 
-  try {
-    const { headers } = await axios.head(url, { timeout: 8000 });
-    if (headers['content-length']) return +headers['content-length'];
-  } catch {/* ignore */}
-  return 0;
+   try {
+    const response = await axios.get(url, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
+        Accept: "text/html",
+      },
+    });
+    const sizeInBytes = response.data.length;
+    console.log(`Size: ${sizeInBytes} bytes`);
+    if (sizeInBytes == undefined) {
+      return 0;
+    } else {
+      return sizeInBytes;
+    }
+    
+  } catch (error) {
+    console.error("Error fetching site:", error.message);
+  }
 }
 
 module.exports = { getHtmlSize, getContentLength };
