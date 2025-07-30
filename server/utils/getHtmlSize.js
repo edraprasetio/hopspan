@@ -1,5 +1,4 @@
 const { getBrowser } = require("./browserLaunch");
-const axios = require("axios");
 
 async function getHtmlSize(rawUrl) {
     console.log("Fetching url:", rawUrl);
